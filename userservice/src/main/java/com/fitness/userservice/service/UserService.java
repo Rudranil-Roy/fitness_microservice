@@ -16,10 +16,10 @@ public class UserService {
     public UserResponse register(RegisterRequest request) {
 
         if(userRepository.existsByEmail(request.getEmail())){
-            UserEntity existingUser= userRepository.getUserEntitiesByEmail();
+            UserEntity existingUser= userRepository.getUserEntitiesByEmail(request.getEmail());
             UserResponse response = new UserResponse();
             response.setId(existingUser.getId());
-            response.setKeyCloakId(existingUser.getKeyCloakId());
+            response.setKeycloakId(existingUser.getKeycloakId());
             response.setEmail(existingUser.getEmail());
             response.setPassword(existingUser.getPassword());
             response.setFirstName(existingUser.getFirstName());
@@ -31,7 +31,7 @@ public class UserService {
 
         UserEntity user= new UserEntity();
         user.setEmail(request.getEmail());
-        user.setKeyCloakId(request.getKeyCloakId());
+        user.setKeycloakId(request.getKeycloakId());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setPassword(request.getPassword());
@@ -40,7 +40,7 @@ public class UserService {
 
         UserResponse response= new UserResponse();
         response.setId(user.getId());
-        response.setKeyCloakId(user.getKeyCloakId());
+        response.setKeycloakId(user.getKeycloakId());
         response.setEmail(user.getEmail());
         response.setPassword(user.getPassword());
         response.setFirstName(user.getFirstName());
@@ -51,13 +51,22 @@ public class UserService {
     }
 
     public UserResponse getUserProfile(String userId) {
-
-        return (UserResponse) userRepository.findById(userId)
+        UserEntity user= userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+        UserResponse response= new UserResponse();
+        response.setId(user.getId());
+        response.setKeycloakId(user.getKeycloakId());
+        response.setEmail(user.getEmail());
+        response.setFirstName(user.getFirstName());
+        response.setLastName(user.getLastName());
+        response.setCreatedAt(user.getCreatedAt());
+        response.setUpdatedAt(user.getUpdatedAt());
+        response.setPassword(user.getPassword());
+        return response;
     }
 
     public Boolean existByUserId(String userId) {
-        return userRepository.existsByKeyCloakId
+        return userRepository.existsByKeycloakId
                 (userId);
     }
 }

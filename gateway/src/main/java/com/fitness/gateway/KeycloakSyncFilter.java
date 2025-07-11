@@ -27,7 +27,7 @@ public class KeycloakSyncFilter implements WebFilter {
         RegisterRequest registerRequest = getUserDetails(token);
 
         if(userId== null)
-            userId=registerRequest.getKeyCloakId();
+            userId=registerRequest.getKeycloakId();
 
         if(userId!=null && token!=null){
             String finalUserId = userId;
@@ -64,10 +64,11 @@ public class KeycloakSyncFilter implements WebFilter {
             registerRequest.setPassword("dummy@123");
             registerRequest.setFirstName(claimsSet.getStringClaim("given_name"));
             registerRequest.setLastName(claimsSet.getStringClaim("family_name"));
-            registerRequest.setKeyCloakId(claimsSet.getStringClaim("sub"));
+            registerRequest.setKeycloakId(claimsSet.getStringClaim("sub"));
             return registerRequest;
         } catch (Exception e){
             e.printStackTrace();
+            return null;
         }
     }
 }
